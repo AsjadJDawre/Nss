@@ -1,88 +1,22 @@
 Array
 (
-    [username] => raj
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
-    [department] => Computer
-    [year] => FE
-    [dob] => 21
-    [category] => Open
-    [contact] => 9687881036
-)
-Array
-(
-    [username] => Umar
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
-    [department] => Civil
-    [year] => SE
-    [dob] => 18/03/2004
-    [category] => Open
-    [contact] => 9874561890
-)
-Array
-(
-    [username] => asjad
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
+    [username] => SOPHIA WILSON
+    [gender] => Female
+    [address] => 987 Cedar St
     [department] => Computer
     [year] => TE
-    [dob] => 19
-    [category] => Open
-    [contact] => 9687565106
+    [dob] => 1999-11-30
+    [category] => Scheduled Castes (SC)
+    [contact] => 5554443330
 )
 Array
 (
-    [username] => Ali
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
+    [username] => ALICE SMITH
+    [gender] => Female
+    [address] => 456 Elm St
     [department] => Computer
-    [year] => TE
-    [dob] => 19
-    [category] => Open
-    [contact] => 9874563210
-)
-Array
-(
-    [username] => Khamzat
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
-    [department] => Mechanical
-    [year] => TE
-    [dob] => 18/03/2001
-    [category] => Open
-    [contact] => 9874563210
-)
-Array
-(
-    [username] => JABBAR
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
-    [department] => Mechanical
     [year] => BE
-    [dob] => 23
-    [category] => Open
-    [contact] => 9874102536
-)
-Array
-(
-    [username] => Rayyan
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
-    [department] => Civil
-    [year] => BE
-    [dob] => 25
-    [category] => Open
-    [contact] => 9874563210
-)
-Array
-(
-    [username] => Zaid
-    [gender] => male
-    [address] => 123, ABC Apartments, Main Street, Andheri West, Mumbai - 400053, Maharashtra, India.
-    [department] => Civil
-    [year] => BE
-    [dob] => 18/03/2000
-    [category] => Open
-    [contact] => 9821561230
+    [dob] => 1998-04-20
+    [category] => Scheduled Castes (SC)
+    [contact] => 9876543210
 )
