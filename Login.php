@@ -211,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <label for="">Password</label>
           </div>
           <div class="forget">
-            <label for=""><input type="checkbox">Remember Me<a href="recover_email.php">Forget Password</a></label>
+            <label for=""><input type="checkbox">Remember Me<a href="forgot_pass.php">Forget Password</a></label>
           </div> 
           <div class="button_group" id="login_button">
             <button type="submit" class="custom_submit_button">Log in</button>

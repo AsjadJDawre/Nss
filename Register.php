@@ -478,7 +478,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
-      mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssss", $param_username, $param_title, $param_photo, $param_password,$confirm_password , $param_gender, $param_category, $param_address, $param_contact, $param_dob, $param_zip, $param_city, $param_department, $param_year, $param_rollno, $param_father_name, $param_surname, $param_email, $param_hobbies, $param_special_interest, $param_blood_group, $param_height, $param_voter, $param_voter_id, $param_worked_in_nss, $param_toilet_attached, $param_parent_name, $param_office_address,$mother_name, $param_parent_contact, $param_relationship, $param_profession,$student_email;
+      mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssss", $param_username, $param_title, $param_photo, $param_password,$confirm_password , $param_gender, $param_category, $param_address, $param_contact, $param_dob, $param_zip, $param_city, $param_department, $param_year, $param_rollno, $param_father_name, $param_surname, $param_email, $param_hobbies, $param_special_interest, $param_blood_group, $param_height, $param_voter, $param_voter_id, $param_worked_in_nss, $param_toilet_attached, $param_parent_name, $param_office_address,$mother_name, $param_parent_contact, $param_relationship, $param_profession,$student_email);
 
         // Set these parameters
         $param_username = $username;

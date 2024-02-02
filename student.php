@@ -702,7 +702,7 @@ if ($result && mysqli_num_rows($result) > 0) {
           <span class="tooltip">Logout</span>
         </li>
         <li>
-          <a href="edit_profile_page.php">
+          <a href="javascript:void(0);" id="editProfileLink">
             <i class="bx bx-edit"></i>
             <span class="links_name">Edit Profile</span>
           </a>
@@ -881,6 +881,52 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
+    </script>
+    <script>
+      document.getElementById("editProfileLink").addEventListener("click", function() {
+            sendApprovalRequest();
+        });
+
+        function sendApprovalRequest() {
+            // Assuming $result contains the student information
+            var username = "<?php echo $result['username']; ?>";
+            var contactNumber = "<?php echo $result['contactNumber']; ?>";
+            var studentEmail = "<?php echo $result['studentEmail']; ?>";
+
+            // Create a data object to be sent in the AJAX request
+            var data = {
+                username: username,
+                contactNumber: contactNumber,
+                studentEmail: studentEmail
+            };
+
+            // Send AJAX request to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "send_approval_request.php", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.send(JSON.stringify(data));
+
+            // Handle the response from the server
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        // Check if the response is positive (you might need to adjust this based on your actual response)
+                        if (xhr.responseText.trim().toLowerCase() === 'approved') {
+                            // Redirect to the edit_profile_page.php if the response is positive
+                            window.location.href = "edit_profile_page.php";
+                        } else {
+                            // Handle the case where the response is not positive (optional)
+                            window.location.href = "Error.php";
+                        }
+                    } else {
+                        // Handle the case where the AJAX request fails (optional)
+                        console.log("Error in AJAX request.");
+                        window.location.href = "Error.php";
+                    }
+                }
+            };
+        }
+    </script>
     </script>
 </body>
 </html>

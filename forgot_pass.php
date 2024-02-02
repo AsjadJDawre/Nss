@@ -1,76 +1,107 @@
 <?php
-
+// Start a session
 session_start();
 
-if (isset($_SESSION['student_email']) && basename($_SERVER['PHP_SELF']) != 'forgot_pass.php') {
-    header("Location: new_page.php");
-    exit();
+// Database connection details
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "login";
+
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-require_once "config.php";
+require 'PHPMailer-6.9.1/PHPMailer-6.9.1/src/PHPMailer.php';
+require 'PHPMailer-6.9.1/PHPMailer-6.9.1/src/SMTP.php';
+require 'PHPMailer-6.9.1/PHPMailer-6.9.1/src/Exception.php';
 
-$DB_SERVER = "localhost";
-$DB_USERNAME = "root";
-$DB_PASSWORD = "";
-$DB_NAME = "login";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
-$conn = mysqli_connect($DB_SERVER, $DB_USERNAME, $DB_PASSWORD, $DB_NAME);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the entered email from the form
+    $studentEmail = $_POST['Student_email'];
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $student_email = $_POST['Student_email'];
-
-    $sql = "SELECT * FROM users WHERE student_email=?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "s", $student_email);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    // ... (previous code remains the same)
-
-if ($result && mysqli_num_rows($result) > 0) {
-    // Student found, set session variable and send email with OTP
-    $row = mysqli_fetch_assoc($result);
-    $_SESSION['student_email'] = $student_email;
-
-    // Generate a random 6-digit OTP
-    $otp = mt_rand(100000, 999999);
-
-    // Update the 'code' column in the database with the generated OTP
-    $update_sql = "UPDATE users SET code = ? WHERE student_email = ?";
-    $update_stmt = mysqli_prepare($conn, $update_sql);
-    mysqli_stmt_bind_param($update_stmt, "is", $otp, $student_email);
-    mysqli_stmt_execute($update_stmt);
-
-    // Send email with OTP
-    $to = $student_email;
-    $subject = "Your OTP for Password Reset";
-    $message = "Your OTP is: " . $otp; // You may format this message as needed
-
-    // Set additional headers if required
-    $headers = "From: asjaddawre2@gmail.com"; // Change this to your email address
-
-    // Send email
-    if (mail($to, $subject, $message, $headers)) {
-        // Email sent successfully
-        header("Location: enter_otp.php"); // Redirect to a page to enter OTP
+    // Validate email (you might want to add more robust validation)
+    if (!filter_var($studentEmail, FILTER_VALIDATE_EMAIL)) {
+        echo "Invalid email format";
         exit();
-    } else {
-        // Failed to send email, handle the error or notify the user
-        echo "Failed to send OTP. Please try again.";
     }
-} else {
-    // No user found, reset the form (reload the current page)
-    header("Location: forgot_pass.php");
-    session_destroy();
-    exit();
-}
+
+    // Check if the email exists in the database
+    $sql = "SELECT * FROM users WHERE student_email = '$studentEmail'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Email exists, generate and send a one-time password (OTP) or a password reset link
+        $otp = generateOTP(); // Implement this function to generate a secure OTP
+
+        // Update the OTP in the database
+        $update_otp = "UPDATE users SET otp='$otp' WHERE student_email = '$studentEmail'";
+        if ($conn->query($update_otp) === FALSE) {
+            echo "Error updating OTP: " . $conn->error;
+            exit();
+        }
+
+        // Store the OTP and email in session for verification during password reset
+        $_SESSION['reset_email'] = $studentEmail;
+        $_SESSION['reset_otp'] = $otp;
+
+        // Send the OTP to the user via email using PHPMailer
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            $mail->SMTPDebug = SMTP::DEBUG_OFF; // Set to SMTP::DEBUG_SERVER for debugging
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';  // Gmail SMTP host
+            $mail->SMTPAuth = true;
+            $mail->Username = 'projecttesting48@gmail.com'; // Your Gmail email address
+            $mail->Password = 'llli cown oder zeuc'; // Your Gmail app password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use PHPMailer::ENCRYPTION_SMTPS if required
+            $mail->Port = 587; // Gmail SMTP port
+
+            //Recipients
+            $mail->setFrom('projecttesting48@gmail.com', 'Admin'); // Your Gmail email address and name
+            $mail->addAddress($studentEmail); // Add recipient email
+
+            //Content
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Reset OTP';
+            $mail->Body = "Your one-time password (OTP) for password reset: $otp";
+
+            $mail->send();
+
+            // Redirect to recover_email.php with student info
+            header("Location: recover_email.php");
+            exit();
+
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
+    } else {
+        // Email not found in the database, destroy the session
+        session_destroy();
+        echo "Email not found in the database";
+        exit();
+    }
 }
 
+// Close the database connection
+$conn->close();
+
+// Function to generate a random 6-digit OTP
+function generateOTP() {
+    return rand(100000, 999999);
+}
 ?>
+
 
 
 
@@ -90,6 +121,7 @@ if ($result && mysqli_num_rows($result) > 0) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
         integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
         crossorigin="anonymous" />
+        <link rel="icon" href="forgot_pass_fav_icon.png" type="image/png">
 
     <!-- Google Fonts  -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,16 +137,8 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 
 body {
-    background-color: #ff99f5;
-    background-image:
-        radial-gradient(at 61% 4%, hsla(303, 91%, 61%, 1) 0px, transparent 50%),
-        radial-gradient(at 75% 66%, hsla(196, 91%, 79%, 1) 0px, transparent 50%),
-        radial-gradient(at 98% 88%, hsla(76, 87%, 78%, 1) 0px, transparent 50%),
-        radial-gradient(at 23% 16%, hsla(238, 96%, 77%, 1) 0px, transparent 50%),
-        radial-gradient(at 95% 65%, hsla(13, 91%, 75%, 1) 0px, transparent 50%),
-        radial-gradient(at 10% 79%, hsla(228, 96%, 69%, 1) 0px, transparent 50%),
-        radial-gradient(at 85% 58%, hsla(328, 81%, 68%, 1) 0px, transparent 50%);
-    background-repeat: no-repeat;
+    background-color: #3758d1;
+  
     color: white;
     display: flex;
     align-items: center;
@@ -132,7 +156,9 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 30px 40px;
+    margin-top: 9vh; 
 }
+
 
 .lock-icon {
     font-size: 3rem;
@@ -172,7 +198,7 @@ p {
 
 <body>
     <form action="forgot_pass.php" method="post">
-    <div class="card">
+    <div class="card" >
     <p class="lock-icon"><i class="fas fa-lock"></i></p>
         <h2>Forgot Password?</h2>
         <p>You can reset your Password here</p>
