@@ -182,17 +182,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
 
-
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <link rel="stylesheet" href="Login.css"> <!-- Replace this with the appropriate CSS file -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="Login.css">
   <title>NSS OFFICIAL</title>
   <style>
-    /* Additional styles can be added here */
+    .inputbox {
+      position: relative;
+    }
+
+    .inputbox ion-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .forget{
+      position: relative;
+      right: -120px;
+          }
   </style>
 </head>
+
 <body>
   <section>
     <div class="form-box login_form_container" id="formBox">
@@ -202,17 +217,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
           <h2>Login</h2>
           <div class="inputbox input_group">
             <ion-icon name="mail-outline"></ion-icon>
-            <input type="text" name="username" id="text" class="input_text" aria-describedby="emailHelp" placeholder="Enter Username" required>
+            <input type="text" name="username" id="text" class="input_text" aria-describedby="emailHelp"
+              placeholder="Enter Username" required>
             <label for="">Email</label>
           </div>
           <div class="inputbox input_group">
-            <ion-icon name="lock-closed-outline"></ion-icon>
-            <input type="password" name="password" class="input_text" placeholder="Enter Password" required>
-            <label for="">Password</label>
+            <input type="password" name="password" class="input_text" id="passwordInput"
+              placeholder="Enter Password" required>
+            <ion-icon id="passwordToggle" name="eye-outline"></ion-icon>
+            <label for="passwordInput">Password</label>
           </div>
           <div class="forget">
-            <label for=""><input type="checkbox">Remember Me<a href="forgot_pass.php">Forget Password</a></label>
-          </div> 
+            <label for=""><a href="forgot_pass.php">Forget Password</a></label>
+          </div>
           <div class="button_group" id="login_button">
             <button type="submit" class="custom_submit_button">Log in</button>
           </div>
@@ -229,20 +246,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     const formBox = document.getElementById('formBox');
     const usernameInput = document.querySelector('input[name="username"]');
     const passwordInput = document.querySelector('input[name="password"]');
-    
+
     usernameInput.addEventListener('focus', increaseBackdropBlur);
     usernameInput.addEventListener('blur', resetBackdropBlur);
     passwordInput.addEventListener('focus', increaseBackdropBlur);
     passwordInput.addEventListener('blur', resetBackdropBlur);
-    
+
     function increaseBackdropBlur() {
       formBox.style.backdropFilter = 'blur(5.2px)';
     }
-    
+
     function resetBackdropBlur() {
       formBox.style.backdropFilter = 'blur(1.5px)';
     }
+
+    const passwordToggle = document.getElementById('passwordToggle');
+    passwordToggle.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+    });
   </script>
 </body>
+
 </html>
+
 
