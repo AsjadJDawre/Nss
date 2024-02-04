@@ -290,6 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         // Output the PDF to the browser for download
         $pdf->Output($filename,'D');
 
+    }
 
 
 
@@ -316,228 +317,215 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
 
-
-
-
-    // Check if username is empty
-    if (isset($_POST["username"]) && !empty(trim($_POST["username"]))) {
-        $param_username = strtoupper(trim($_POST['username']));
-        $sql = "SELECT id FROM users WHERE username = ?";
-        $stmt = mysqli_prepare($conn, $sql);
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-
-            // Try to execute this statement
-            if (mysqli_stmt_execute($stmt)) {
-                mysqli_stmt_store_result($stmt);
-                if (mysqli_stmt_num_rows($stmt) == 1) {
-                    $username_err = "This username is already taken";
+    if (isset($_POST['register'])) {
+        // Check if username is empty
+        if (isset($_POST["username"]) && !empty(trim($_POST["username"]))) {
+            $param_username = strtoupper(trim($_POST['username']));
+            $sql = "SELECT id FROM users WHERE username = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "s", $param_username);
+    
+                // Try to execute this statement
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_store_result($stmt);
+                    if (mysqli_stmt_num_rows($stmt) == 1) {
+                        $username_err = "This username is already taken";
+                    } else {
+                        $username = $param_username;
+                    }
                 } else {
-                    $username = $param_username;
+                    echo "Something went wrong";
                 }
+    
+                mysqli_stmt_close($stmt); // Close the statement only if it was prepared successfully
             } else {
-                echo "Something went wrong";
+                echo "SQL statement preparation failed: " . mysqli_error($conn); // Handle the preparation error
             }
-
-            mysqli_stmt_close($stmt); // Close the statement only if it was prepared successfully
         } else {
-            echo "SQL statement preparation failed"; // Handle the preparation error
+            $username_err = "Username cannot be blank";
         }
-    } else {
-        $username_err = "Username cannot be blank";
-    }
-
-    // Check for password
-    if (isset($_POST['password']) && !empty(trim($_POST['password']))) {
-        $password = trim($_POST['password']);
-        if (strlen($password) < 8) {
-            $password_err = "Password cannot be less than 8 characters";
-        }
-    } else {
-        $password_err = "Password cannot be blank";
-    }
-
-    // Check for confirm password field
-    if (isset($_POST['confirm_password']) && !empty(trim($_POST['confirm_password']))) {
-        $confirm_password = trim($_POST['confirm_password']);
-        if ($password !== $confirm_password) {
-            $password_err = "Passwords should match";
-        }
-    }
-
-    // Check if city is empty
-    if (isset($_POST["city"]) && !empty(trim($_POST["city"]))) {
-        $city = trim($_POST['city']);
-    } else {
-        $city_err = "City cannot be blank";
-    }
-
-    // Retrieve the values for gender, category, address, age, contact, zip, and city
-    if (isset($_POST['title'])) {
-        $title = $_POST['title'];
-    }
-
-    if (isset($_POST['gender'])) {
-        $gender = $_POST['gender'];
-    }
-
-    if (isset($_POST['category'])) {
-        $category = $_POST['category'];
-    }
-
-    if (isset($_POST['address'])) {
-        $address = $_POST['address'];
-    }
-
-    if (isset($_POST['dob'])) {
-        $dob = $_POST['dob'];
-    }
-
-    if (isset($_POST['contact'])) {
-        $contact = $_POST['contact'];
-    }
-
-    if (isset($_POST['zip'])) {
-        $zip = $_POST['zip'];
-    }
-    if (isset($_POST['department'])) {
-        $department = $_POST['department'];
-    }
-    if (isset($_POST['year'])) {
-        $year = $_POST['year'];
-    }
-    if (isset($_POST['rollno'])) {
-        $rollno = $_POST['rollno'];
-    }
-    if (isset($_POST['father_name'])) {
-        $father_name = strtoupper($_POST['father_name']);
-    }
-    if (isset($_POST['surname'])) { 
-        $surname =strtoupper($_POST['surname']);
-    }
-    if (isset($_POST['mother_name'])) { 
-        $mother_name = strtoupper($_POST['mother_name']);
-    }
-  
-
-
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
-    $hobbies = isset($_POST['hobbies']) ? $_POST['hobbies'] : '';
-    $special_interest = isset($_POST['special_interest']) ? $_POST['special_interest'] : '';
-    $blood_group = isset($_POST['blood_group']) ? $_POST['blood_group'] : '';
-    $height = isset($_POST['height']) ? $_POST['height'] : '';
-    $voter = isset($_POST['voter']) ? $_POST['voter'] : '';
-    $voter_id = isset($_POST['voter_id']) ? $_POST['voter_id'] : '';
-    $worked_in_nss = isset($_POST['worked_in_nss']) ? $_POST['worked_in_nss'] : '';
-    $toilet_attached = isset($_POST['toilet_attached']) ? $_POST['toilet_attached'] : '';
-    $parent_name = isset($_POST['parent_name']) ? $_POST['parent_name'] : '';
-    $office_address = isset($_POST['office_address']) ? $_POST['office_address'] : '';
-    $parent_contact = isset($_POST['parent_contact']) ? $_POST['parent_contact'] : '';
-    $relationship = isset($_POST['relationship']) ? $_POST['relationship'] : '';
-    $profession = isset($_POST['profession']) ? $_POST['profession'] : '';
-    $student_email = isset($_POST['student_email']) ? $_POST['student_email'] : '';
-
-
-
-
-
-
-
-
-
-
-
-
-    // Handle file upload
-    if (isset($_FILES["photo"]) && !empty($_FILES["photo"]["name"])) {
-      $file_name = $_FILES["photo"]["name"];
-      $file_tmp = $_FILES["photo"]["tmp_name"];
-      $uploads_dir = 'D:\\Xamp\\htdocs\\Nss\\images';
-  
-      if (!empty($file_name)) {
-          // Get the user-entered title
-          $title = $_POST['title'];
-  
-          // Sanitize the title to remove unwanted characters and spaces
-          $title = preg_replace("/[^a-zA-Z0-9]+/", "", $title);
-  
-          // Append the title to the file name (you can also add a file extension if needed)
-          $photo = $title . "." . pathinfo($file_name, PATHINFO_EXTENSION);
-  
-          // Move the uploaded file with the user's title as the name
-          move_uploaded_file($file_tmp, "$uploads_dir/$photo");
-      }
-  } else {
-      $photo_err = "Please upload a photo.";
-  }
-  
-
-  if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($city_err) && empty($photo_err)) {
-    $sql = "INSERT INTO users (username, title, photo, password,confirm_password, gender, category, address, contact, dob, zip, city, department, year, rollno, father_name, surname, email, hobbies, special_interest, blood_group, height, voter, voter_id, worked_in_nss, toilet_attached, parent_name, office_address,mother_name, parent_contact, relationship, profession,student_email) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $sql);
-
-    if ($stmt) {
-      mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssss", $param_username, $param_title, $param_photo, $param_password,$confirm_password , $param_gender, $param_category, $param_address, $param_contact, $param_dob, $param_zip, $param_city, $param_department, $param_year, $param_rollno, $param_father_name, $param_surname, $param_email, $param_hobbies, $param_special_interest, $param_blood_group, $param_height, $param_voter, $param_voter_id, $param_worked_in_nss, $param_toilet_attached, $param_parent_name, $param_office_address,$mother_name, $param_parent_contact, $param_relationship, $param_profession,$student_email);
-
-        // Set these parameters
-        $param_username = $username;
-        $param_title = $title;
-        $param_photo = $photo;
-        $param_password = password_hash($password, PASSWORD_DEFAULT);
-        $paramconfirm_password = password_hash($confirm_password, PASSWORD_DEFAULT);
-        $param_gender = $gender;
-        $param_category = $category;
-        $param_address = $address;
-        $param_contact = $contact;
-        $param_dob = $dob;
-        $param_zip = $zip;
-        $param_city = $city;
-        $param_department = $department;
-        $param_year = $year;
-        $param_rollno = $rollno;
-        $param_father_name = $father_name;
-        $param_surname = $surname;
-        $param_email = $email;
-        $param_hobbies = $hobbies;
-        $param_special_interest = $special_interest;
-        $param_blood_group = $blood_group;
-        $param_height = $height;
-        $param_voter = $voter;
-        $param_voter_id = $voter_id;
-        $param_worked_in_nss = $worked_in_nss;
-        $param_toilet_attached = $toilet_attached;
-        $param_parent_name = $parent_name;
-        $param_office_address = $office_address;
-        $param_parent_contact = $parent_contact;
-        $param_relationship = $relationship;
-        $param_profession = $profession;
-        $mother_name=$mother_name;
-        $student_email=$student_email;
-
-//         // Try to execute the query
-        if (mysqli_stmt_execute($stmt)) {
-            header("location:Login.php");
-            exit;
+    
+        // Check for password
+        if (isset($_POST['password']) && !empty(trim($_POST['password']))) {
+            $password = trim($_POST['password']);
+            if (strlen($password) < 8) {
+                $password_err = "Password cannot be less than 8 characters";
+            }
         } else {
-            echo "Something went wrong... cannot redirect!";
+            $password_err = "Password cannot be blank";
         }
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "SQL statement preparation failed: " . mysqli_error($conn); // Handle the preparation error
+    
+        // Check for confirm password field
+        if (isset($_POST['confirm_password']) && !empty(trim($_POST['confirm_password']))) {
+            $confirm_password = trim($_POST['confirm_password']);
+            if ($password !== $confirm_password) {
+                $password_err = "Passwords should match";
+            }
+        }
+    
+        // Check if city is empty
+        if (isset($_POST["city"]) && !empty(trim($_POST["city"]))) {
+            $city = trim($_POST['city']);
+        } else {
+            $city_err = "City cannot be blank";
+        }
+    
+        // Retrieve the values for gender, category, address, age, contact, zip, and city
+        if (isset($_POST['title'])) {
+            $title = $_POST['title'];
+        }
+    
+        if (isset($_POST['gender'])) {
+            $gender = $_POST['gender'];
+        }
+    
+        if (isset($_POST['category'])) {
+            $category = $_POST['category'];
+        }
+    
+        if (isset($_POST['address'])) {
+            $address = $_POST['address'];
+        }
+    
+        if (isset($_POST['dob'])) {
+            $dob = $_POST['dob'];
+        }
+    
+        if (isset($_POST['contact'])) {
+            $contact = $_POST['contact'];
+        }
+    
+        if (isset($_POST['zip'])) {
+            $zip = $_POST['zip'];
+        }
+        if (isset($_POST['department'])) {
+            $department = $_POST['department'];
+        }
+        if (isset($_POST['year'])) {
+            $year = $_POST['year'];
+        }
+        if (isset($_POST['rollno'])) {
+            $rollno = $_POST['rollno'];
+        }
+        if (isset($_POST['father_name'])) {
+            $father_name = strtoupper($_POST['father_name']);
+        }
+        if (isset($_POST['surname'])) {
+            $surname = strtoupper($_POST['surname']);
+        }
+        if (isset($_POST['mother_name'])) {
+            $mother_name = strtoupper($_POST['mother_name']);
+        }
+    
+        $email = isset($_POST['email']) ? $_POST['email'] : '';
+        $hobbies = isset($_POST['hobbies']) ? $_POST['hobbies'] : '';
+        $special_interest = isset($_POST['special_interest']) ? $_POST['special_interest'] : '';
+        $blood_group = isset($_POST['blood_group']) ? $_POST['blood_group'] : '';
+        $height = isset($_POST['height']) ? $_POST['height'] : '';
+        $voter = isset($_POST['voter']) ? $_POST['voter'] : '';
+        $voter_id = isset($_POST['voter_id']) ? $_POST['voter_id'] : '';
+        $worked_in_nss = isset($_POST['worked_in_nss']) ? $_POST['worked_in_nss'] : '';
+        $toilet_attached = isset($_POST['toilet_attached']) ? $_POST['toilet_attached'] : '';
+        $parent_name = isset($_POST['parent_name']) ? $_POST['parent_name'] : '';
+        $office_address = isset($_POST['office_address']) ? $_POST['office_address'] : '';
+        $parent_contact = isset($_POST['parent_contact']) ? $_POST['parent_contact'] : '';
+        $relationship = isset($_POST['relationship']) ? $_POST['relationship'] : '';
+        $profession = isset($_POST['profession']) ? $_POST['profession'] : '';
+        $student_email = isset($_POST['student_email']) ? $_POST['student_email'] : '';
+    
+        // Handle file upload
+        if (isset($_FILES["photo"]) && !empty($_FILES["photo"]["name"])) {
+            $file_name = $_FILES["photo"]["name"];
+            $file_tmp = $_FILES["photo"]["tmp_name"];
+            $uploads_dir = 'C:\\xampp\\htdocs\\NSS\\images';
+    
+            if (!empty($file_name)) {
+                // Get the user-entered title
+                $title = $_POST['title'];
+    
+                // Sanitize the title to remove unwanted characters and spaces
+                $title = preg_replace("/[^a-zA-Z0-9]+/", "", $title);
+    
+                // Append the title to the file name (you can also add a file extension if needed)
+                $photo = $title . "." . pathinfo($file_name, PATHINFO_EXTENSION);
+    
+                // Move the uploaded file with the user's title as the name
+                move_uploaded_file($file_tmp, "$uploads_dir/$photo");
+            }
+        } else {
+            $photo_err = "Please upload a photo.";
+        }
+        if (empty($username_err) && empty($password_err) && empty($confirm_password_err) ) {
+            $sql = "INSERT INTO users (username, title, photo, password, confirm_password, gender, category, address, contact, dob, zip, city, department, year, rollno, father_name, surname, email, hobbies, special_interest, blood_group, height, voter, voter_id, worked_in_nss, toilet_attached, parent_name, office_address, mother_name, parent_contact, relationship, profession, student_email) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = mysqli_prepare($conn, $sql);
+    
+            if ($stmt) {
+
+                  // Set these parameters
+                  $param_username = $username;
+                  $param_title = $title;
+                  $param_photo = $photo;
+                  $param_password = password_hash($password, PASSWORD_DEFAULT);
+                  $paramconfirm_password = password_hash($confirm_password, PASSWORD_DEFAULT);
+                  $param_gender = $gender;
+                  $param_category = $category;
+                  $param_address = $address;
+                  $param_contact = $contact;
+                  $param_dob = $dob;
+                  $param_zip = $zip;
+                  $param_city = $city;
+                  $param_department = $department;
+                  $param_year = $year;
+                  $param_rollno = $rollno;
+                  $param_father_name = $father_name;
+                  $param_surname = $surname;
+                  $param_email = $email;
+                  $param_hobbies = $hobbies;
+                  $param_special_interest = $special_interest;
+                  $param_blood_group = $blood_group;
+                  $param_height = $height;
+                  $param_voter = $voter;
+                  $param_voter_id = $voter_id;
+                  $param_worked_in_nss = $worked_in_nss;
+                  $param_toilet_attached = $toilet_attached;
+                  $param_parent_name = $parent_name;
+                  $param_office_address = $office_address;
+                  $param_mother_name = $mother_name;
+                  $param_parent_contact = $parent_contact;
+                  $param_relationship = $relationship;
+                  $param_profession = $profession;
+                  $param_student_email = $student_email;
+
+                  mysqli_stmt_bind_param($stmt, "sssssssssssssssssssssssssssssssss", $param_username, $param_title, $param_photo, $param_password, $paramconfirm_password, $param_gender, $param_category, $param_address, $param_contact, $param_dob, $param_zip, $param_city, $param_department, $param_year, $param_rollno, $param_father_name, $param_surname, $param_email, $param_hobbies, $param_special_interest, $param_blood_group, $param_height, $param_voter, $param_voter_id, $param_worked_in_nss, $param_toilet_attached, $param_parent_name, $param_office_address, $param_mother_name, $param_parent_contact, $param_relationship, $param_profession, $param_student_email);
+
+
+    
+              
+    
+                // Try to execute the query
+                if (mysqli_stmt_execute($stmt)) {
+                    header("location:Login.php");
+                    exit;
+                } else {
+                    echo "Something went wrong... cannot redirect!";
+                    echo "Error: " . mysqli_error($conn);
+
+                }
+                mysqli_stmt_close($stmt);
+            } else {
+                echo "SQL statement preparation failed: " . mysqli_error($conn); // Handle the preparation error
+            }
+        }
     }
-}
+    
+    // Close the database connection
+    mysqli_close($conn);
 
 }
-
-// Close the database connection
-mysqli_close($conn);
-
-  
-
-}
-
     ?>
+    
 
 
 

@@ -485,20 +485,20 @@ table {
         .Buttons{
             margin:20px 5px 5px;
         }
-
         .pdf-link {
-            display: inline-block;
-            padding: 8px 12px;
-            background-color: #003355;
-            border-radius: 14px;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 10px;
-            margin-left:8px;
-            width:auto;
-            height:auto;
-        }
+    /* display: flex; */
+    padding: 8px 12px;
+    background-color: #003355;
+    border-radius: 14px; /* Keep this one */
+    color: white;
+    text-decoration: none;
+    margin-top: 10px;
+    margin-right: 100px;
+    margin-left: 8px;
+    width: auto;
+    height: auto;
+}
+
 
         .pdf-link:hover {
             background-color: #005d91;
@@ -529,8 +529,7 @@ select{
     color: white;
     background-color: #054773;
 }
-      
-
+    
 
     </style>
 </head>
@@ -624,7 +623,7 @@ select{
 </div>
 
 <div class="hidden-content" id="hiddenContent">
-    <h2>Hidden Content</h2>
+    <h2>Scrolling Content</h2>
     <form id="textInputForm" method="post" action="welcome.php">
         <label for="userInput">Enter Text:</label>
         <input type="text" id="userInput" name="userInput" required >
@@ -688,131 +687,21 @@ Notification Input
 </div>
 
 
-<div class="container">
-<div id="heading">
-    <h1>Students Report </h1></div>
-    <form method="post" action='welcome.php'>
-        <label for="category">Select Category:</label>
-        <select name="category" id="category">
-            <option value="" disabled selected>Select Category</option>
-            <!-- Options for categories -->
-            <option value="Open">Open</option>
-            <option value="Scheduled Castes (SC)">Scheduled Castes (SC)</option>
-            <option value="Scheduled Tribe (ST)">Scheduled Tribe (ST)</option>
-            <option value="Vimukta Jati (VJ) / De-Notified Tribes (DT) (NT-A)">Vimukta Jati (VJ) / De-Notified Tribes (DT) (NT-A)</option>
-            <option value="Nomadic Tribes 1 (NT-B)">Nomadic Tribes 1 (NT-B)</option>
-            <option value="Nomadic Tribes 2 (NT-C)">Nomadic Tribes 2 (NT-C)</option>
-            <option value="Nomadic Tribes 3 (NT-D)">Nomadic Tribes 3 (NT-D)</option>
-            <option value="Other Backward Classes (OBC)">Other Backward Classes (OBC)</option>
-            <option value="Socially and Educationally Backward Classes (SEBC)">Socially and Educationally Backward Classes (SEBC)</option>
-        </select>
-        <input type="submit" value="Filter" class="Buttons">
-        <a href="gdata.php?category=<?php echo urlencode($selectedCategory); ?>"class="pdf-link">Generate PDF</a>
-    </form>
-
-    <!-- Display table -->
-    <?php if (!empty($tableData)): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Address</th>
-                    <th>Department</th> 
-                    <th>Year</th>
-                    <th>DOB</th>
-                    <th>Category</th>
-                    <th>Contact</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($tableData as $row): ?>
-                    <tr>
-                        <td><?php echo $row['username']; ?></td>
-                        <td><?php echo $row['gender']; ?></td>
-                        <td><?php echo $row['address']; ?></td>
-                        <td><?php echo $row['department']; ?></td>
-                        <td><?php echo $row['year']; ?></td>
-                        <td><?php echo $row['dob']; ?></td>
-                        <td><?php echo $row['category']; ?></td>
-                        <td><?php echo $row['contact']; ?></td>
-                        <td>
-                            <form method='post'>
-                                <input type='hidden' name='delete_name' value='<?php echo $row['username']; ?>'>
-                                <input type='submit' name='delete_submit' value='Delete' style='background-color: red; color: white;'>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
 
 
-    <form action="welcome.php" method="post" style="padding: 15px;"> 
-
-        
-    <label for="year">Select Year:</label>
-        <select name="year" id="year">
-            <option value="" disabled selected>Select Year</option>
-            <!-- Options for categories -->
-            <option value="FE">FE</option>
-            <option value="SE">SE</option>
-            <option value="TE">TE</option>
-            <option value="BE">BE</option>
-            </select>
-        <input type="submit" value="Filter" class="Buttons">
-        <a href="gdata.php?year=<?php echo urlencode($year); ?>"class="pdf-link">Generate PDF</a>
-
-
-    <?php if (!empty($tableData1)): ?>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Address</th>
-                    <th>Department</th> 
-                    <th>Year</th>
-                    <th>DOB</th>
-                    <th>Category</th>
-                    <th>Contact</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($tableData1 as $row): ?>
-                    <tr>
-                        <td><?php echo $row['username']; ?></td>
-                        <td><?php echo $row['gender']; ?></td>
-                        <td><?php echo $row['address']; ?></td>
-                        <td><?php echo $row['department']; ?></td>
-                        <td><?php echo $row['year']; ?></td>
-                        <td><?php echo $row['dob']; ?></td>
-                        <td><?php echo $row['category']; ?></td>
-                        <td><?php echo $row['contact']; ?></td>
-                        <td>
-                            <form method='post'>
-                                <input type='hidden' name='delete_name' value='<?php echo $row['username']; ?>'>
-                                <input type='submit' name='delete_submit' value='Delete' style='background-color: red; color: white;'>
-                            </form>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php endif; ?>
     
 
 
 
-    </form>
-      </div>
-    </div>
-    </div>
+        
+<a href="student_repo.php">
+  <input type="button" value="Get Report" class="pdf-link" id="action_btn">
+</a>
+
+
+
+    
  
-</form>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
