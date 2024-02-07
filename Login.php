@@ -1,13 +1,17 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // Check if the user is already logged in
 if (isset($_SESSION['username'])) {
-    header("location: welcome.php");
+    if ($_SESSION['role'] === 'admin') {
+        header("location: welcome.php");
+    } else {
+        header("location: student.php"); // Redirect non-admin users to the student page
+    }
     exit;
 }
-
-require_once "config.php";
 
 $DB_SERVER = "localhost";
 $DB_USERNAME = "root";
@@ -34,14 +38,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $password = trim($_POST['password']);
     }
 
-    if (empty($err)) {
-        // Check if the username is "admin"
-        if ($username === "admin") {
+
+    // Check if the entered credentials belong to an admin
+    $qy = "SELECT admin_email, password FROM admin WHERE admin_email=?";
+    $stmt = mysqli_prepare($conn, $qy);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+
+        if (mysqli_stmt_num_rows($stmt) == 1) {
+            mysqli_stmt_bind_result($stmt, $adminEmail, $adminPassword);
+            mysqli_stmt_fetch($stmt);
+
+            echo "Debug: Fetched admin_email: $adminEmail, Fetched password: $adminPassword<br>";
+
+            // Now $adminEmail and $adminPassword contain the desired data
+
             // Check if the entered password matches your predefined admin password
-            $adminPassword = "your_set_password"; // Replace with your actual admin password
-            if ($password === $adminPassword) {
+            if (password_verify($password, $adminPassword)) {
                 // Username and password match for the "admin" user
-                $_SESSION["username"] = $username;
+                $_SESSION["username"] = $adminEmail;
                 $_SESSION["role"] = "admin"; // Set admin role
                 $_SESSION["loggedin"] = true;
 
@@ -52,49 +70,64 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 $err = "Incorrect password for admin";
             }
         } else {
-            // For non-admin users (assuming they are students)
-            if (empty(trim($_POST['username'])) || empty(trim($_POST['password']))) {
-                $err = "Please enter email and password";
-            } else {
-                $email = trim($_POST['username']);
-                $userPassword = trim($_POST['password']);
-
-                if (empty($err)) {
-                    // Check the database for the user with the provided email
-                    $sql = "SELECT * FROM users WHERE student_email = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("s", $email);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-
-                    if ($result->num_rows == 1) {
-                        $row = $result->fetch_assoc();
-                        $hashedPasswordFromDB = $row['password']; // Assuming the password field in DB is named 'password'
-
-                        // Verify the hashed password against the user's input
-                        if (password_verify($userPassword, $hashedPasswordFromDB)) {
-                            session_start();
-                            $_SESSION["username"] = $row['student_email']; // Adjust with your user data
-                            $_SESSION["role"] = "student"; // Assuming 'role' is a column in your database
-                            $_SESSION["loggedin"] = true;
-
-                            // Redirect user to student dashboard
-                            header("location: student.php");
-                            exit;
-                        } else {
-                            // Incorrect password
-                            $err = "Invalid email or password";
-                        }
-                    } else {
-                        // No user found with the provided email
-                        $err = "Invalid email or password";
-                    }
-                }
-            }
+            // No matching record found for the given username as admin
+            echo "No record found for the username: $username <br>";
         }
+
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    } else {
+        $err = "Error executing query: " . mysqli_error($conn);
     }
+
+    // Check if there is a student with the entered credentials
+    $sql = "SELECT * FROM users WHERE student_email = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $hashedPasswordFromDB = $row['password'];
+
+            // Verify the hashed password against the user's input
+            if (password_verify($password, $hashedPasswordFromDB)) {
+                session_start();
+                $_SESSION["username"] = $row['student_email'];
+                $_SESSION["role"] = "student";
+                $_SESSION["loggedin"] = true;
+
+                // Redirect user to student dashboard
+                header("location: student.php");
+                exit;
+            } else {
+                // Incorrect password
+                $err = "Invalid email or password";
+            }
+        } else {
+            // No user found with the provided email
+            $err = "Invalid email or password";
+        }
+
+        // Close the statement
+        mysqli_stmt_close($stmt);
+    } else {
+        $err = "Error executing query: " . mysqli_error($conn);
+    }
+
+    // Unset form data variables after all checks
+    unset($username, $password);
 }
+
 ?>
+
+
+
+
+
 
 
 

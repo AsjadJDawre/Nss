@@ -702,7 +702,7 @@ if ($result && mysqli_num_rows($result) > 0) {
           <span class="tooltip">Logout</span>
         </li>
         <li>
-          <a href="javascript:void(0);" id="editProfileLink">
+          <a href="edit_profile_page.php" id="editProfileLink">
             <i class="bx bx-edit"></i>
             <span class="links_name">Edit Profile</span>
           </a>
