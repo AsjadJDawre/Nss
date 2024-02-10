@@ -1,88 +1,23 @@
-<?php 
+<?php
 require_once('config.php'); // Include your database configuration
 require('fpdf/fpdf.php');
 
 // Default or initial data when the page loads
 $tableData = [];
-$selectedCategory = "";
-$selectedYear = "";
 
-// Handle form submissions
-   // Handle form submissions or GET requests
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-  if (isset($_GET['category'])) {
-    $selectedCategory = $_GET["category"];
-    $queryCategory = "SELECT username, gender, address, department, year, dob, category, contact 
-    FROM users 
-    WHERE category = '$selectedCategory' 
-    ORDER BY 
-        CASE 
-            WHEN year = 'FE' THEN 1 
-            WHEN year = 'SE' THEN 2 
-            WHEN year = 'TE' THEN 3 
-            WHEN year = 'BE' THEN 4 
-            ELSE 5 
-        END ASC,
-        CASE 
-            WHEN department = 'Computer' THEN 1 
-            WHEN department = 'Mechanical' THEN 2 
-            WHEN department = 'Civil' THEN 3 
-            ELSE 4 
-        END ASC,
-        year ASC";
-  }
-
-  if(isset($_GET['year'])){
-
-    $selectedYear = $_GET["year"];
-
-  // Query the database for students in the selected category
-  
-
-  // Query the database for students in the selected year
-  $queryYear = "SELECT username, gender, address, department, year, dob, category, contact 
-      FROM users 
-      WHERE year = '$selectedYear' 
-      ORDER BY 
-          CASE 
-              WHEN department = 'Computer' THEN 1 
-              WHEN department = 'Mechanical' THEN 2 
-              WHEN department = 'Civil' THEN 3 
-              ELSE 4 
-          END ASC,
-          year ASC";
-
-
-  }
-  
-
- // ...
-
-// Execute the query based on the selected scenario
-$result = null;
-if ($selectedCategory !== "") {
-    $result = mysqli_query($conn, $queryCategory);
-} elseif ($selectedYear !== "") {
-    $result = mysqli_query($conn, $queryYear);
+// Check if data is sent via GET request
+function logMessage($message) {
+    $logFile = 'C:\\xampp\\htdocs\\NSS\\data_log.txt'; // Specify the path to your log file
+    file_put_contents($logFile, date('Y-m-d H:i:s') . ' - ' . $message . PHP_EOL, FILE_APPEND);
 }
 
-// Check for SQL errors
-if (!$result) {
-  die('Error: ' . mysqli_error($conn));
-}
+// Check if data has been posted
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['data'])) {
+    // Log the received data
+    logMessage('Received data: ' . $_POST['data']);
 
-// Display fetched data for debugging by creating a text file
-if ($result && mysqli_num_rows($result) > 0) {
-  $file = fopen("debug_output.txt", "w"); // Open a file for writing
-  while ($row = mysqli_fetch_assoc($result)) {
-      $tableData[] = $row;
-      // Write data to the file for debugging purposes
-      fwrite($file, print_r($row, true)); // Write each row to the file
-  }
-  fclose($file); // Close the file
-  mysqli_free_result($result); // Free the result set
-}
-}
+    // Retrieve and decode the posted data
+    $tableData = json_decode(urldecode($_POST['data']), true);
 
 
         $pdf = new FPDF('P', 'mm', 'A4');
@@ -152,6 +87,7 @@ $pdf->SetTextColor(0); // Reset text color
             }
             
             }
+        }
         $pdf->Output('student_report.pdf', 'I'); // 'I' displays the PDF in the browser
         exit; // Stop further execution after PDF generation
 

@@ -254,7 +254,8 @@ if ($conn->connect_error) {
     <style>
                 body {
     margin: 0;
-    padding: 0;
+    padding-top: 60px;
+
 
 }
         /* Define the default styles for .navbar and .box1 */
@@ -486,10 +487,10 @@ table {
             margin:20px 5px 5px;
         }
         .pdf-link {
-    /* display: flex; */
-    padding: 8px 12px;
+            display:flex;
+            padding: 8px 12px;
     background-color: #003355;
-    border-radius: 14px; /* Keep this one */
+    border-radius: 14px; 
     color: white;
     text-decoration: none;
     margin-top: 10px;
@@ -534,8 +535,10 @@ select{
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark " style="background-color:#042d41; color:white;">
-    <a class="navbar-brand" href="#">Nss Login System</a>
+<nav class="navbar navbar-expand-lg navbar-dark " style="background-color:#042d41;      position: fixed;
+    top: 0;
+    z-index: 999;color:white;">
+    <a class="navbar-brand" style="margin-left: 65px;" href="#">Nss Login System</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -546,10 +549,13 @@ select{
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="#" onclick="showContent()">Events</a>
+                <a class="nav-link" href="#" >Events</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="Logout.php" >Logout</a>
+                <a class="nav-link" href="admin.php"> Access Control </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="Logout.php"> Logout </a>
             </li>
         </ul>
         <div class="navbar-collapse collapse">
@@ -592,7 +598,7 @@ select{
 
 <form id="textInputForm" method="post" action="">
 
-<div class="scrolling-txt" id="scrollingText">
+<div class="scrolling-txt" id="scrollingText" onclick="showContent()">
     <div class="scrolling-text">
         <?php
         // Establish database connection
