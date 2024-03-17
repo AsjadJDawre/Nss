@@ -238,6 +238,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       position: relative;
       right: -120px;
           }
+          .custom_submit_button {
+    width: 100%;
+    height: 40px;
+    color:#ffffff99;
+    font-size: 18px;
+    font-weight: bold;
+    border: 2px solid #000000;
+    border-radius: 20px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .custom_submit_button:hover {
+    background-color: #040e5f;
+    color: #fff;
+  }
   </style>
 </head>
 
@@ -246,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <div class="form-box login_form_container" id="formBox">
       <!-- ... your existing HTML code ... -->
       <div class="form-value login_form">
-        <form action="" method="post">
+        <form action="" method="post" autocomplete='off'>
           <h2>Login</h2>
           <div class="inputbox input_group">
             <ion-icon name="mail-outline"></ion-icon>

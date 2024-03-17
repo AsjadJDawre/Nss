@@ -562,7 +562,8 @@ input[type="number"]::-webkit-inner-spin-button{
         <div class="logo_name"></div>
         <i class="bx bx-menu" id="btn"></i>
       </div>
-      <ul class="nav-list">
+      <ul class="nav-list" style="    margin-left: -28px;
+">
         <li>
           <div class="profile-details">
           <!-- <?php
@@ -916,9 +917,11 @@ input[type="number"]::-webkit-inner-spin-button{
 
   <div class="form-group">
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
+      <input class="form-check-input" type="checkbox" id="gridCheck" style="
+    border: 2px solid black;
+">
       <label class="form-check-label" for="gridCheck">
-        Check me out
+        I hereby Informed that all My Details are Genuine. <br> And I am Aware that it will be Used Throughout My NSS Enrollement
       </label>
     </div>
   </div>

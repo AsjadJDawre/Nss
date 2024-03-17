@@ -95,7 +95,7 @@ $student = $_SESSION['username'];
             margin-top: 15px;
             width: 100%; 
             position: sticky;
-            left: 0;
+            left: 400px;
         }
 
         /* Media query for smaller screens */
@@ -658,7 +658,9 @@ select{
         <div class="logo_name"><?php echo $row['username']; ?></div>
         <i class="bx bx-menu" id="btn"></i>
       </div>
-      <ul class="nav-list">
+      <ul class="nav-list" style="
+    margin-left: -28px;
+">
         <li>
           <div class="profile-details">
           <!-- <?php

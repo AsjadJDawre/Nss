@@ -330,14 +330,18 @@ input[type="submit"]:hover {
       <option value="Other Backward Classes (OBC)">Other Backward Classes (OBC)</option>
       <option value="Socially and Educationally Backward Classes (SEBC)">Socially and Educationally Backward Classes (SEBC)</option>
     </select>
-    <select name="year" id="year">
+    <select name="year" id="year" style="
+    width: 129px;
+">
       <option value=""   selected disabled    >Select Year</option>
       <option value="FE">FE</option>
       <option value="SE">SE</option>
       <option value="TE">TE</option>
       <option value="BE">BE</option>
     </select>
-    <select name="gender" id="gender">
+    <select name="gender" id="gender" style="
+    width: 157px;
+">
       <option value="" selected disabled      >Select Gender</option>
       <option value="Male">Male</option>
       <option value="Female">Female</option>

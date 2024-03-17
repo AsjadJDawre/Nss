@@ -530,92 +530,8 @@ select{
     color: white;
     background-color: #054773;
 }
+    
 
-      /* Styles for the pop-up card */
-      .popup-card {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 40px; /* Increased padding */
-            border-radius: 10px; /* Increased border radius */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-            z-index: 1000; /* Ensure it appears above other content */
-            max-width: 400px; /* Set maximum width */
-            width: 80%; /* Set width as a percentage */
-        }
-
-        /* Styles for the blurred background */
-        .blur-background {
-            display: none; /* Initially hidden */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-            backdrop-filter: blur(5px); /* Apply blur effect */
-            z-index: 999; /* Ensure it's behind the pop-up card */
-        }
-
-        /* Styles for input box */
-        .popup-card textarea {
-            height: 100px; /* Increased height */
-            width: 90%; /* Set width to 90% of the pop-up card */
-            resize: none; /* Disable resizing */
-        }
-
-        /* Styles for buttons */
-        .popup-card button {
-            margin-top: 10px; /* Add margin between buttons */
-        }
-
-        /* Flex container for parent cards */
-        .parent_card {
-            display: flex;
-            justify-content: space-around; /* Adjust as needed */
-            margin-bottom: 20px; /* Add some space between parent cards */
-        }
-
-        /* Adjust card width */
-        .card {
-            /* width: 45%; Adjust card width */
-        }
-
-/* Styles for the blurred background */
-        .blur-background {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px); /* Increased blur */
-            z-index: 999;
-        }
-        .popup-card button {
-            margin-top: 20px; /* Space between buttons */
-            padding: 10px 20px; /* Increased padding */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        /* Style for close button */
-        .popup-card .close-button {
-            background-color: #ff5e5e; /* Red color for close button */
-            color: white;
-        }
-        #userInput {
-            /* Increased height */
-            height: 100px;
-            width: 90%;
-            resize: none; /* Disable resizing */
-        }
     </style>
 </head>
 <body>
@@ -682,110 +598,99 @@ select{
 
 <form id="textInputForm" method="post" action="">
 
-<div class="scrolling-txt" id="scrollingText" onclick="showPopup()">
-        <div class="scrolling-text">
-            <?php
-            // Establish database connection
-            $conn = new mysqli($servername, $username, $password, $dbname);
+<div class="scrolling-txt" id="scrollingText" onclick="showContent()">
+    <div class="scrolling-text">
+        <?php
+        // Establish database connection
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
-            // Check connection
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Retrieve scrolling text from the database
+        $sql = "SELECT scrolling_text FROM content_text";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            // Output data
+            while ($row = $result->fetch_assoc()) {
+                echo '<p>' . $row["scrolling_text"] . '</p>';
             }
+        } else {
+            // If no data found, display default text
+            echo '<p>This is an example of scrolling text using CSS.</p>';
+        }
 
-            // Retrieve scrolling text from the database
-            $sql = "SELECT scrolling_text FROM content_text";
-            $result = $conn->query($sql);
-
-            if ($result->num_rows > 0) {
-                // Output data
-                while ($row = $result->fetch_assoc()) {
-                    echo '<p>' . $row["scrolling_text"] . '</p>';
-                }
-            } else {
-                // If no data found, display default text
-                echo '<p>This is an example of scrolling text using CSS.</p>';
-            }
-
-            $conn->close();
-            ?>
-        </div>
+        $conn->close();
+        ?>
     </div>
+</div>
 
-   <!-- Scrolling Content Popup -->
-<div class="popup-card" id="popupCard2">
+<div class="hidden-content" id="hiddenContent">
     <h2>Scrolling Content</h2>
     <form id="textInputForm" method="post" action="welcome.php">
-        <label for="userInput">Enter Text</label>
-        <textarea id="userInput" name="userInput" required style="margin-left: 22px;"></textarea>
-        <div class="button-container">
-            <button type="submit" class="input-btn">Add Text</button>
-            <button type="button" class="close-button" onclick="hidePopup('scrolling')">Close Window</button>
-        </div>
+        <label for="userInput">Enter Text:</label>
+        <input type="text" id="userInput" name="userInput" required >
+        <button type="submit" class="input-btn">Add Text</button>
+        <button type="button" class="close-button" onclick="hideContent()">Close Window</button>
     </form>
 </div>
 
-<!-- Background blur for Scrolling Content Popup -->
-<div class="blur-background" id="blurBackground2"></div>
+    </div>
+    <div class="parent_card">
 
-<!-- Parent Card Section -->
-<div class="parent_card">
-    <!-- News Component Card -->
-    <div class="card homepage aos-init aos-animate" onclick="showPopup('news')" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="2000">
+    <div class="card homepage aos-init aos-animate"onclick="card_data()"  data-aos="fade-down" data-aos-easing="linear" data-aos-duration="2000">
         <div class="card-header1">
-            <span class="news"><img src="news.gif" alt="" style="height:auto; width:45px; filter:invert(100%) brightness(200%); ">  News</span>
+            <span id="rightContainer_ContentTable2_lblPanel2" class="news"><img src="news.gif" alt="" style="height:auto; width:45px; filter:invert(100%) brightness(200%); ">  News</span>
         </div>
         <div class="card-body">
-            <marquee align="justify" direction="up" onmouseout="this.start()" height="230px" onmouseover="this.stop()" scrollamount="2" scrolldelay="60">
-                <p align="justify"><?php echo $news; ?></p>
+            <marquee id="rightContainer_ContentTable2_panel2" align="justify" direction="up" onmouseout="this.start()" height="230px" onmouseover="this.stop()" scrollamount="2" scrolldelay="60">
+                <p align="justify"><?php echo $news; ?>
+                </p>
             </marquee>
         </div>
     </div>
 
-    <!-- Notification Component Card -->
-    <div class="card homepage aos-init aos-animate" onclick="showPopup('notification')" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="2000">
+
+
+    <div class="card homepage aos-init aos-animate" onclick="notification_data()" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="2000">
         <div class="card-header1">
-            <span class="news"><img src="notification-bell.gif" alt="" style="height:auto; width:30px;filter:brightness(100%); ">  Notifications</span>
+            <span id="rightContainer_ContentTable2_lblPanel2" class="news"><img src="notification-bell.gif" alt="" style="height:auto; width:30px;filter:brightness(100%); ">  Notifications</span>
         </div>
         <div class="card-body">
-            <marquee align="justify" direction="up" onmouseout="this.start()" height="230px" onmouseover="this.stop()" scrollamount="2" scrolldelay="60">
-                <p align="justify"><?php echo $notification; ?></p>
+            <marquee id="rightContainer_ContentTable2_panel2" align="justify" direction="up" onmouseout="this.start()" height="230px" onmouseover="this.stop()" scrollamount="2" scrolldelay="60">
+                <p align="justify"><?php echo $notification; ?>
+                </p>
             </marquee>
         </div>
     </div>
 </div>
 
-<!-- Popup card for News -->
-<div class="popup-card" id="popupCardNews">
+<div  id="news_inp" style="display: none;">
     <h2 style="margin-left: 65px;margin-top: 15px;">News Input</h2>
-    <form id="textInputFormNews" method="post" action="welcome.php">
-        <label for="userInputNews">Enter Text:</label>
-        <textarea id="userInputNews" name="userInputNews" required></textarea>
-        <div class="button-container">
-            <button type="submit" class="input-btn">Add Text</button>
-            <button type="button" class="close-button" onclick="hidePopup('news')">Close Window</button>
-        </div>
+    <form id="textInputForm1" method="post" action="welcome.php">
+        <label for="news_card">Enter Text:</label>
+        <input type="text" id="news_card" name="news_card" required>
+        <button type="submit" class="input-btn">Add Text</button>
+        <button type="button" class="close-button" id="news_btn" onclick="hide_card()">Close Window</button>
     </form>
 </div>
 
-<!-- Popup card for Notification -->
-<div class="popup-card" id="popupCardNotification">
-    <h2 style="margin-left: 65px;margin-top: 15px;">Notification Input</h2>
-    <form id="textInputFormNotification" method="post" action="welcome.php">
-        <label for="userInputNotification">Enter Details:</label>
-        <textarea id="userInputNews" name="userInputNews" required></textarea>
-        <div class="button-container">
-            <button type="submit" class="input-btn">Add Data</button>
-            <button type="button" class="close-button" onclick="hidePopup('notification')">Close Window</button>
-        </div>
-    </form>
+
+<div id="notification_inp" style="display:none;">
+<h2 style="margin-left: 65px;margin-top: 25px;">
+Notification Input
+</h2>
+<form action="welcome.php" id="textInputForm2" method="POST">
+    <label for="notification">Enter Details </label>
+    <input type="text" name="notification" id="notification" required >
+    <button id="notification_btn" class="input-btn"> Add Data </button>
+    <button type="button" class="close-button" id="notification_btn" onclick="hide_card2()">Close Window</button>
+
+</form>
 </div>
-
-<!-- Background blur for News Popup -->
-<div class="blur-background" id="blurBackgroundNews"></div>
-
-<!-- Background blur for Notification Popup -->
-<div class="blur-background" id="blurBackgroundNotification"></div>
 
 
 
@@ -815,100 +720,311 @@ select{
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
-
-
-
         <script>
-// Function to show/hide scrolling text pop-up
-document.addEventListener("DOMContentLoaded", function() {
-    var scrollingText = document.getElementById("scrollingText");
-    scrollingText.addEventListener("click", showPopupScrolling);
-});
-
-function showPopupScrolling() {
-    document.getElementById("popupCard2").style.display = "block";
-    document.getElementById("blurBackground2").style.display = "block";
-}
-
-function hidePopupScrolling() {
-    document.getElementById("popupCard2").style.display = "none";
-    document.getElementById("blurBackground2").style.display = "none";
-}
-
-// Function to show/hide news and notification pop-ups
-function showPopup(type) {
-    if (type === 'news') {
-        document.getElementById("blurBackgroundNews").style.display = "block";
-        document.getElementById("popupCardNews").style.display = "block";
-    } else if (type === 'notification') {
-        document.getElementById("blurBackgroundNotification").style.display = "block";
-        document.getElementById("popupCardNotification").style.display = "block";
-    }
-}
-
-function hidePopup(type) {
-    if (type === 'news') {
-        document.getElementById("blurBackgroundNews").style.display = "none";
-        document.getElementById("popupCardNews").style.display = "none";
-    } else if (type === 'notification') {
-        document.getElementById("blurBackgroundNotification").style.display = "none";
-        document.getElementById("popupCardNotification").style.display = "none";
-    } else if (type === 'scrolling') {
-        hidePopupScrolling();
-    }
-}
+   document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var alert = document.getElementById('successAlert');
+                if (alert) {
+                    alert.style.display = 'none'; // Hide the alert after 3 seconds
+                }
+            }, 3000); // 3000 milliseconds = 3 seconds
+        });
 
 
-    // Other functions for your webpage
-    function showContent() {
-        let content = document.getElementById("hiddenContent");
-        content.style.display = "block";
-    }
 
-    function addText() {
-        let userInput = document.getElementById("userInput").value;
-        let scrollingText = document.getElementById("scrollingText").getElementsByTagName("p")[0];
-        scrollingText.textContent = userInput;
-    }
 
-    function hideContent() {
-        let hiddenContent = document.getElementById("hiddenContent");
-        hiddenContent.style.display = "none";
-        let closeButton = document.getElementById("closeButton");
-        closeButton.style.display = "none";
-    }
 
-    function card_data() {
+        function showContent() {
+            let content = document.getElementById("hiddenContent");
+            content.style.display = "block";
+        }
+        function addText() {
+            let userInput = document.getElementById("userInput").value;
+            let scrollingText = document.getElementById("scrollingText").getElementsByTagName("p")[0];
+            scrollingText.textContent = userInput;
+        }
+        function hideContent() {
+            let hiddenContent = document.getElementById("hiddenContent");
+            hiddenContent.style.display = "none";
+            let closeButton = document.getElementById("closeButton");
+            closeButton.style.display = "none";
+        }
+
+      function card_data(){
+        //   alert("good morning !!");
         let content = document.getElementById("news_inp");
-        content.style.display = "block";
-    }
+            content.style.display = "block";
+      }
+     
+      function hide_card() {
+let card = document.getElementById("news_inp");
+    card.style.display = "none";
+}
 
-    function hide_card() {
-        let card = document.getElementById("news_inp");
-        card.style.display = "none";
-    }
 
-    function notification_data() {
+function notification_data(){
+        //   alert("good morning !!");
         let content = document.getElementById("notification_inp");
-        content.style.display = "block";
-    }
+            content.style.display = "block";
+      }
 
-    function hide_card2() {
-        let card = document.getElementById("notification_inp");
-        card.style.display = "none";
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            var alert = document.getElementById('successAlert1');
-            if (alert) {
-                alert.style.display = 'none'; // Hide the alert after 3 seconds
-            }
-        }, 3000); // 3000 milliseconds = 3 seconds
-    });
-</script>
+      function hide_card2() {
+let card = document.getElementById("notification_inp");
+    card.style.display = "none";
+}
 
 
+document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                var alert = document.getElementById('successAlert1');
+                if (alert) {
+                    alert.style.display = 'none'; // Hide the alert after 3 seconds
+                }
+            }, 3000); // 3000 milliseconds = 3 seconds
+        });
+
+            
+        
+
+
+
+    </script>
 </body>
 </html>
+
+
+
+
+<?php
+session_start();
+require_once('config.php'); 
+require('fpdf/fpdf.php');
+
+
+// Redirect if not logged in
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("location: login.php");
+    exit();
+}
+
+
+$servername = 'localhost';
+$username = 'root';
+$password = '';
+$dbname = 'login';
+
+
+// Check if the form was submitted and userInput is not empty
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !empty($_POST['userInput'])) {
+    
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Retrieve and sanitize the scrolling text from the form
+    $newText = $conn->real_escape_string($_POST["userInput"]);
+
+    // Update the database with new text
+    $sql = "UPDATE content_text SET scrolling_text='$newText'";
+
+    if ($conn->query($sql) === TRUE) {
+        $_SESSION['success'] = true; // Set a session variable for success message
+        $conn->close();
+        header("Location: welcome.php");
+        exit();
+    } else {
+        echo "Error updating scrolling text: " . $conn->error;
+    }
+
+    $conn->close();
+}
+
+if($_SERVER["REQUEST_METHOD"]=="POST"&& !empty($_POST['news_card'])){
+    $conn=new mysqli($servername,$username,$password,$dbname);
+    
+    if($conn->connect_error){
+        die("Connection Failed !! ".$conn->connect_error);
+    }
+    $newsdata=$conn->real_escape_string($_POST['news_card']);
+    
+    $sql="UPDATE content_text SET news_card='$newsdata'";
+
+    if($conn->query($sql)== TRUE){
+        $_SESSION['success']= TRUE;
+        $conn->close();
+        header('Location: welcome.php');
+        exit();
+    }
+    else{
+        echo "Error Updating the news Data ".$conn->error;
+    }
+}
+
+
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
+    $news = "";
+    $notification = "";
+    
+    if(isset($_POST['news_card'])) {
+        $newsText = $_POST['news_card'];
+        $sql = "UPDATE content_text SET news='$newsText'";
+        $conn->query($sql);
+    
+        $_SESSION['news'] = $newsText; // Store in session
+    }
+    
+    if(isset($_POST['notification'])) {
+        $notificationText = $_POST['notification'];
+        $sql = "UPDATE content_text SET notification='$notificationText'";
+        $conn->query($sql);
+    
+        $_SESSION['notification'] = $notificationText; // Store in session
+    }
+    
+
+
+
+
+    if(isset($_SESSION['news'])) {
+        $news = $_SESSION['news'];
+    } else {
+        $sql = "SELECT news FROM content_text";
+        $result = $conn->query($sql);
+    
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $news = isset($row["news"]) ? $row["news"] : "";
+        }
+    }
+    
+    if(isset($_SESSION['notification'])) {
+        $notification = $_SESSION['notification'];
+    } else {
+        $sql = "SELECT notification FROM content_text";
+        $result = $conn->query($sql);
+    
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $notification = isset($row["notification"]) ? $row["notification"] : "";
+        }
+    }
+   
+ 
+
+    
+    // Default or initial data when the page loads
+    $tableData = [];
+    $tableData1=[];
+    
+    // Handle form submissions
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST["category"])) {
+            $selectedCategory = $_POST["category"];
+            // Query the database for students in the selected category
+            $query = "SELECT username, gender, address, department, year, dob, category, contact 
+            FROM users 
+            WHERE category = '$selectedCategory' 
+            ORDER BY 
+              CASE 
+                WHEN year = 'FE' THEN 1 
+                WHEN year = 'SE' THEN 2 
+                WHEN year = 'TE' THEN 3 
+                WHEN year = 'BE' THEN 4 
+                ELSE 5 
+              END ASC,
+              CASE 
+                WHEN department = 'Computer' THEN 1 
+                WHEN department = 'Mechanical' THEN 2 
+                WHEN department = 'Civil' THEN 3 
+                ELSE 4 
+              END ASC,
+              year ASC";
+        
+    
+    
+          $result = mysqli_query($conn, $query);
+    
+            if ($result && mysqli_num_rows($result) > 0) {
+                // Build the table data
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $tableData[] = $row;
+                }
+                mysqli_free_result($result); // Free the result set
+            }
+        }
+    
+       
+    }
+    
+        if (isset($_POST["year"])) {
+            $year = $_POST["year"];
+            // Query the database for students in the selected category
+            $query = "SELECT username, gender, address, department, year, dob, category, contact 
+            FROM users 
+            WHERE year = '$year' 
+            ORDER BY 
+              CASE 
+                WHEN year = 'FE' THEN 1 
+                WHEN year = 'SE' THEN 2 
+                WHEN year = 'TE' THEN 3 
+                WHEN year = 'BE' THEN 4 
+                ELSE 5 
+              END ASC,
+              CASE 
+                WHEN department = 'Computer' THEN 1 
+                WHEN department = 'Mechanical' THEN 2 
+                WHEN department = 'Civil' THEN 3 
+                ELSE 4 
+              END ASC,
+              year ASC";
+        
+    
+    
+          $result = mysqli_query($conn, $query);
+    
+            if ($result && mysqli_num_rows($result) > 0) {
+                // Build the table data
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $tableData1[] = $row;
+                }
+                mysqli_free_result($result); // Free the result set
+            }
+        }
+    
+       
+        
+            
+    
+        if (isset($_POST["delete_submit"])) {
+            $deleteName = mysqli_real_escape_string($conn, $_POST["delete_name"]);
+    
+            // Query to delete the record based on the provided name
+            $deleteSql = "DELETE FROM users WHERE username = '$deleteName'";
+            $deleteResult = mysqli_query($conn, $deleteSql);
+    
+            if ($deleteResult) {
+                echo '<div id="successAlert1" class="alert alert-success" role="alert">
+                        Record of ' . $deleteName . ' has been deleted successfully.
+                      </div>';
+                      header("Location:welcome.php".$_SERVER['PHP_SELF']); // Redirect to the same page
+    
+            
+            } else {
+                echo "Error deleting record: " . mysqli_error($conn);
+            }
+        }
+        
+        $conn->close();
+
+
+?>
