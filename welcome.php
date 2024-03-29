@@ -639,6 +639,9 @@ select{
                 <a class="nav-link" href="admin.php"> Access Control </a>
             </li>
             <li class="nav-item active">
+                <a class="nav-link" href="gall_uploads.php"> Upload Photos </a>
+            </li>
+            <li class="nav-item active">
                 <a class="nav-link" href="Logout.php"> Logout </a>
             </li>
         </ul>

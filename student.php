@@ -711,6 +711,14 @@ if ($result && mysqli_num_rows($result) > 0) {
           <span class="tooltip">Edit Profile</span>
         </li>
         <li>
+        <li>
+  <a href="gallery.php">
+    <i class="bx bx-images"></i>
+    <span class="links_name">Gallery</span>
+  </a>
+  <span class="tooltip">Gallery</span>
+</li>
+<li>
           <a href="#">
             <i class="bx bx-question-mark"></i>
             <span class="links_name">Help and Support</span>

@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $contact = $_POST['contact'];
   $city = $_POST['city'];
   $zip = $_POST['zip'];
-  $email = $_POST['email'];
+  $student_email = $_POST['student_email'];
   $hobbies = $_POST['hobbies'];
   $special_interest = $_POST['special_interest'];
   $blood_group = $_POST['blood_group'];
@@ -43,13 +43,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
   $parent_name = $_POST['parent_name'];
   $parent_contact = $_POST['parent_contact'];
+  $parent_email = $_POST['parent_email'];
   $office_address = $_POST['office_address'];
   $mother_name = $_POST['mother_name'];
   $relationship = $_POST['relationship'];
   $profession = $_POST['profession'];
   $category = $_POST['category'];
 
-  $sql_update = "UPDATE users SET username = '$username', father_name = '$father_name', surname = '$surname', rollno = '$rollno', gender = '$gender', address = '$address', department = '$department', year = '$year', dob = '$dob', contact = '$contact', city = '$city', zip = '$zip', email = '$email', hobbies = '$hobbies', special_interest = '$special_interest', blood_group = '$blood_group', height = '$height', voter = '$voter', voter_id = '$voter_id', worked_in_nss = '$worked_in_nss', toilet_attached = '$toilet_attached', parent_name = '$parent_name', parent_contact = '$parent_contact', office_address = '$office_address', mother_name = '$mother_name', relationship = '$relationship', profession = '$profession', category = '$category' WHERE student_email = '$student_name'";
+  echo $student_email , $parent_email;
+
+  $sql_update = "UPDATE users SET username = '$username', father_name = '$father_name', surname = '$surname', rollno = '$rollno', gender = '$gender', address = '$address', department = '$department', year = '$year', dob = '$dob', contact = '$contact', city = '$city', zip = '$zip', student_email = '$student_email', hobbies = '$hobbies', special_interest = '$special_interest', blood_group = '$blood_group', height = '$height', voter = '$voter', voter_id = '$voter_id', worked_in_nss = '$worked_in_nss', toilet_attached = '$toilet_attached', parent_name = '$parent_name', parent_contact = '$parent_contact',parent_email = '$parent_email', office_address = '$office_address', mother_name = '$mother_name', relationship = '$relationship', profession = '$profession', category = '$category' WHERE student_email = '$student_name'";
 
 
   if (mysqli_query($conn, $sql_update)) {

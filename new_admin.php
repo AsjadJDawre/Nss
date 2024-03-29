@@ -17,29 +17,24 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Fetch admin details from the database
+    // Fetch admin details from the form
     $admin_email = $_POST['admin_email'];
     $admin_password = $_POST['admin_password'];
 
-    $query = "SELECT * FROM admin WHERE admin_email = '$admin_email'";
-    $result = mysqli_query($conn, $query);
-    if (!$result || mysqli_num_rows($result) == 0) {
-        echo "Admin with this email does not exist.";
-    } else {
-        $admin_data = mysqli_fetch_assoc($result);
-        $hashed_password = $admin_data['password'];
+    // Hash the password
+    $hashed_password = password_hash($admin_password, PASSWORD_DEFAULT);
 
-        // Verify password
-        if (password_verify($admin_password, $hashed_password)) {
-            // Password is correct, redirect to a page
-            header("Location: new_admin.php");
-            exit();
-        } else {
-            // Password is incorrect
-            echo "Incorrect password.";
-        }
+    // Insert data into the admin table
+    $query = "UPDATE admin SET password='$hashed_password' WHERE admin_email='$admin_email'";
+    if ($conn->query($query) === TRUE) {
+        // Data inserted successfully, redirect to a page
+        header("Location: login.php");
+        exit();
+    } else {
+        echo "Error: " . $query . "<br>" . $conn->error;
     }
 }
+session_end();
 ?>
 
 
@@ -73,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         body {
-            background-color: #3758d1;
+            background-color: white;
             color: white;
             display: flex;
             align-items: center;
@@ -96,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .card {
             backdrop-filter: blur(16px) saturate(180%);
             -webkit-backdrop-filter: blur(16px) saturate(180%);
-            background-color: rgba(0, 0, 0, 0.75);
+            background-color:#012b33;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.125);
             display: flex;
@@ -178,14 +173,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </nav>
 
-    <form action="admin.php" method="post">
+    <form action="new_admin.php" method="post">
         <div class="card">
             <p class="lock-icon"><i class="fas fa-lock"></i></p>
             <h2>New Admin?</h2>
             <p>You can Reset Your Credential  Here</p>
-            <input type="text" name='admin_email' class="passInput" placeholder="Existing Admin Email">
-            <input type="text" name='admin_password' class="passInput" placeholder="Password">
-            <input type="submit" class="btn" value="Verify Email">
+            <input type="text" name='admin_email' class="passInput" placeholder="New Admin Email">
+            <input type="text" name='admin_password' class="passInput" placeholder=" Create a new Password">
+            <input type="submit" class="btn" value="Reset">
         </div>
     </form>
 

@@ -17,6 +17,14 @@ if (file_exists($logFile)) {
     file_put_contents($logFile, $logData);
 }
 
+$current_year = date('Y');
+
+// Calculate the next year
+$next_year = $current_year + 1;
+
+// Combine both years into a single string
+$year_range = $current_year . '-' . $next_year;
+
 
 
 
@@ -82,7 +90,7 @@ if (file_exists($imageFilename)) {
     $father_name = isset($_POST['father_name']) ? $_POST['father_name'] : '';
     $surname = isset($_POST['surname']) ? $_POST['surname'] : '';
     $mother_name = isset($_POST['mother_name']) ? $_POST['mother_name'] : '';
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $email = isset($_POST['student_email']) ? $_POST['student_email'] : '';
     $hobbies = isset($_POST['hobbies']) ? $_POST['hobbies'] : '';
     $special_interest = isset($_POST['special_interest']) ? $_POST['special_interest'] : '';
     $blood_group = isset($_POST['blood_group']) ? $_POST['blood_group'] : '';
@@ -108,7 +116,8 @@ if (file_exists($imageFilename)) {
     
     // Prepare the text with proper concatenation
     $pdf->SetFont('Arial', '', 10); // Use Arial font, size 12
-    $text = "\nSir,\nI Mr./Ms. $surname $username $father_name $mother_name of class (in Capital lettersand Surname, Name, Father's and Mother's Name to be mentioned ) Division $department Roll No.$rollno\nwish to participate in NSS activities for the year __________\nI shall abide by all rules and regulations of NSS Programme / Special Camps and participate in the NSS Regular Programme / Special Camps conducted by College/University at own risk.I further undertake to complete 120 hours  of work in Regular Programme and at least one Special Camp of Seven days, during this year / next year. (A student who was a volunteer of NSS in the previous year and has not attended Special Camp can enroll only if he/she undertakes to participate in Special Camp in this year.)";
+    $text = "\nSir,\nI Mr./Ms. $surname $username $father_name $mother_name of class (in Capital letters and Surname, Name, Father's and Mother's Name to be mentioned) Division $department Roll No. $rollno\nwish to participate in NSS activities for the year $year_range.\nI shall abide by all rules and regulations of NSS Programme / Special Camps and participate in the NSS Regular Programme / Special Camps conducted by College/University at own risk. I further undertake to complete 120 hours of work in Regular Programme and at least one Special Camp of Seven days, during this year / next year. (A student who was a volunteer of NSS in the previous year and has not attended Special Camp can enroll only if he/she undertakes to participate in Special Camp in this year.)";
+
     
     // Set the position and output the text
     $pdf->SetX(10);
@@ -151,8 +160,21 @@ if (file_exists($imageFilename)) {
     $xCoordinate = ($pageWidth - $textWidth) / 2 - 17; // Adjusted for more left alignment
     
     // Set the X-coordinate and center the text
-    $pdf->SetX($xCoordinate);
-    $pdf->Cell(0, 50, "PERSONAL DATA OF STUDENT (ALL BLOCK LETTERS)", 0, 1, 'C');
+    // Add a new page
+$pdf->AddPage();
+    $pdf->Line($startX, $startY, $endX, $endY);
+
+
+    $startX = $pdf->GetX();
+
+    // Print the text "PERSONAL DATA OF STUDENT (ALL BLOCK LETTERS)" centered
+    $pdf->Cell(0, 10, "PERSONAL DATA OF STUDENT (ALL BLOCK LETTERS)", 0, 1, 'C');
+    
+    // Determine the ending X position
+    $endX = $pdf->GetX();
+    
+    // Draw the line under the text
+    $pdf->Line($startX, $pdf->GetY(), $endX, $pdf->GetY());
     
     
     // Add Local Address
@@ -248,15 +270,16 @@ if (file_exists($imageFilename)) {
     $pdf->Cell(0, 6, "If Yes, received NSS Registration Fee of Rs. 10/- : YES / NO", 0, 1, 'L'); // Reduced spacing to 6
     $pdf->Cell(0, 6, "Allocated Volunteer Enrolment Code Number (V.E.C.) : MH09 __ __ __ __ __ __ __ __ __", 0, 1, 'L'); // Reduced spacing to 6
     
-    $pdf->Ln(10); 
+    $pdf->Ln(8); 
     $pdf->SetFont('Arial', '', 12); // You can adjust the font and size as needed
     
-    $pdf->MultiCell(0, 10, "Name of Unit Incharge NSS Programme Officer", 0, 'L');
+    $pdf->MultiCell(0, 8, "Name of Unit Incharge NSS Programme Officer", 0, 'L');
     $pdf->MultiCell(0, 10, "_______________________________________", 0, 'L'); // Line for the name
     
     $pdf->Cell(100); // Add space to move to the right side for the signature
     
-    $pdf->Cell(0, -35, "                          Signature", 0, 'R'); // Add some space for the signature
+    $pdf->Cell(0, -35, "Signature", 0, 'R');
+    // Add some space for the signature
     $pdf->Cell(0, 60, "_______________________________________", 0, 'R'); // Line for the signature
     
     // Get the current Y-coordinate and increase it by 17 (or any other necessary spacing)

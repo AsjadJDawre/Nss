@@ -48,7 +48,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
         $contact = $student_data['contact'];
         $city = $student_data['city'];
         $zip = $student_data['zip'];
-        $email = $student_data['email'];
+        $student_email = $student_data['student_email'];
         $hobbies = $student_data['hobbies'];
         $special_interest = $student_data['special_interest'];
         $blood_group = $student_data['blood_group'];
@@ -59,6 +59,7 @@ if (isset($_SESSION['username']) && !empty($_SESSION['username'])) {
         $toilet_attached = $student_data['toilet_attached'];
         $parent_name = $student_data['parent_name'];
         $parent_contact = $student_data['parent_contact'];
+        $parent_email = $student_data['parent_email'];
         $office_address = $student_data['office_address'];
         $mother_name = $student_data['mother_name'];
         $relationship = $student_data['relationship'];
@@ -657,6 +658,10 @@ input[type="number"]::-webkit-inner-spin-button{
       <input type="text" class="form-control" name="rollno" id="rollno" value="<?php echo isset($rollno) ? $rollno : ''; ?>">
     </div>
 
+    <div class="form-group col-md-6">
+    <label for="email">Your Email:</label>
+    <input type="email" class="form-control" id="email" name="student_email" readonly value="<?php echo isset($student_email) ? $student_email : ''; ?>">
+</div>
 
 
    
@@ -785,7 +790,7 @@ input[type="number"]::-webkit-inner-spin-button{
 
   <div class="form-group col-md-6">
     <label for="email">Email:</label>
-    <input type="email" class="form-control" id='email' name="email" required value="<?php echo isset($email) ? $email : ''; ?>">
+    <input type="email" class="form-control" id='email' name="parent_email" required value="<?php echo isset($parent_email) ? $parent_email : ''; ?>">
 </div>
 
 <div class="form-group">
@@ -1032,6 +1037,7 @@ function validateForm(event) {
 }
 
 
+</script>
 
 
 
@@ -1040,8 +1046,7 @@ function validateForm(event) {
 
 
 
-
-
+<script>
 
 const phoneNumberInput = document.getElementById("phoneNumber");
 const errorMessage = document.getElementById("error-message");
@@ -1060,20 +1065,10 @@ phoneNumberInput.addEventListener("input", () => {
   }
 });
 
+</script>
 
-// const passwordInput = document.getElementById("password");
-// const errorMessage1 = document.getElementById("error-message1");
 
-// passwordInput.addEventListener("input", () => {
-//   const passwordValue = passwordInput.value;
-
-//   if (passwordValue.length >= 8) {
-//     errorMessage1.style.display = "none";
-//   } else {
-//     errorMessage1.style.display = "inline";
-//   }
-// });
-
+<script>
 
 document.getElementById("choose-file").addEventListener("click", function () {
             document.getElementById("photo").click();
@@ -1100,7 +1095,8 @@ document.getElementById("choose-file").addEventListener("click", function () {
                 e.preventDefault();
             }
         });
-
+        </script>
+        <script>
 
         const voterRadio = document.getElementsByName('voter');
         const voterIdSection = document.getElementById('voter_id_section');
