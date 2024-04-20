@@ -30,22 +30,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($enteredOTP == $storedOTP) {
             // OTP is valid, update the password in the database
             $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-            $updateSql = "UPDATE users SET password = '$hashedPassword' WHERE student_email = '$resetEmail'";
+            $updateSql = "UPDATE users SET password = '$hashedPassword', confirm_password = '$hashedPassword' WHERE student_email = '$resetEmail'";
 
             if ($conn->query($updateSql) === TRUE) {
-                // Password updated successfully
-                echo "Password reset successfully! You can now <a href='login.php'>login</a> with your new password.";
-
                 // Clear the OTP data in the database
                 $updateotp = "UPDATE users SET otp = NULL WHERE student_email = '$resetEmail'";
                 if ($conn->query($updateotp) === FALSE) {
                     echo "Error updating OTP: " . $conn->error;
+                } else {
+                    // Password updated successfully
+                    header("Location: login.php");
+                    exit();
                 }
-
                 // Destroy the session
                 session_destroy();
-                echo '<div class="mb-4">' . $successMessage . '</div>';
-
             } else {
                 echo "Error updating password: " . $conn->error;
             }

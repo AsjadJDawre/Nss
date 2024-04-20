@@ -24,19 +24,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Hash the password
     $hashed_password = password_hash($admin_password, PASSWORD_DEFAULT);
 
-    // Insert data into the admin table
-    $query = "UPDATE admin SET password='$hashed_password' WHERE admin_email='$admin_email'";
+    // Update data in the admin table
+    $query = "UPDATE admin SET admin_email='$admin_email', password='$hashed_password' WHERE username='ADMIN'";
     if ($conn->query($query) === TRUE) {
-        // Data inserted successfully, redirect to a page
+        // Destroy the session
+        session_destroy();
+        
+        // Redirect to login page
         header("Location: login.php");
         exit();
     } else {
         echo "Error: " . $query . "<br>" . $conn->error;
     }
 }
-session_end();
 ?>
-
 
 
 <!DOCTYPE html>

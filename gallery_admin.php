@@ -77,6 +77,28 @@ if ($files !== false) {
 
 
 
+//Deletion code 
+// Check if delete button is clicked and any image is selected for deletion
+if (isset($_POST['delete']) && isset($_POST['delete_checkbox'])) {
+  $selected_images = $_POST['delete_checkbox'];
+
+  // Loop through selected images and delete them
+  foreach ($selected_images as $image_to_delete) {
+    $image_path = $target_dir . DIRECTORY_SEPARATOR . $image_to_delete;
+    if (unlink($image_path)) {
+      // Image deleted successfully
+      echo "Image deleted successfully: " . $image_to_delete . "<br>";
+      // Remove the deleted image from the $images array to avoid displaying it again
+      $image_key = array_search($image_path, $images);
+      unset($images[$image_key]);
+    } else {
+      echo "Error deleting image: " . $image_to_delete . "<br>";
+    }
+  }
+}
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -632,9 +654,7 @@ if ($files !== false) {
                 <li class="nav-item active">
                     <a class="nav-link" href="welcome.php">Home <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Events</a>
-                </li>
+             
                 <li class="nav-item active">
                     <a class="nav-link" href="admin.php"> Access Control </a>
                 </li>
@@ -683,6 +703,24 @@ if ($files !== false) {
 
 
 
+  <h1>Manage Photos</h1>
+  <?php if (count($images) > 0): ?>
+  <form action="" method="post" enctype="multipart/form-data">
+    <p>Select photos to delete:</p>
+    <?php foreach ($images as $image): ?>
+    <div class="image-container">
+      <img src="<?php echo $image; ?>"  style="width: 150px; height: 100px; object-fit: cover;"  alt="Photo">
+      <input type="checkbox" name="delete_checkbox[]" value="<?php echo basename($image); ?>">
+      <label for="<?php echo basename($image); ?>">Delete</label>
+    </div>
+    <?php endforeach; ?>
+    <button type="submit" name="delete" class="btn btn-danger">Delete Selected Photos</button>
+  </form>
+  <?php else: ?>
+    <p>No photos found in the uploads directory.</p>
+  <?php endif; ?>
+
+
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
@@ -727,7 +765,7 @@ function menuBtnChange() {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-        !-- jQuery first, then Popper.js, then Bootstrap JS -->
+      
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

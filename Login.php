@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             mysqli_stmt_bind_result($stmt, $adminEmail, $adminPassword);
             mysqli_stmt_fetch($stmt);
 
-            echo "Debug: Fetched admin_email: $adminEmail, Fetched password: $adminPassword<br>";
+            // echo "Debug: Fetched admin_email: $adminEmail, Fetched password: $adminPassword<br>";
 
             // Now $adminEmail and $adminPassword contain the desired data
 

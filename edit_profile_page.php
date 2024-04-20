@@ -608,12 +608,7 @@ input[type="number"]::-webkit-inner-spin-button{
           <span class="tooltip">Logout</span>
         </li>
         <li>
-          <a href="edit_profile_page.php">
-            <i class="bx bx-edit"></i>
-            <span class="links_name">Edit Profile</span>
-          </a>
-          <span class="tooltip">Edit Profile</span>
-        </li>
+       
         <li>
           <a href="#">
             <i class="bx bx-question-mark"></i>

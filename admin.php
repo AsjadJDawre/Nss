@@ -1,4 +1,12 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer-6.9.1/PHPMailer-6.9.1/src/PHPMailer.php';
+require 'PHPMailer-6.9.1/PHPMailer-6.9.1/src/SMTP.php';
+require 'PHPMailer-6.9.1/PHPMailer-6.9.1/src/Exception.php';
+
 // Start a session
 session_start();
 
@@ -17,27 +25,51 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Fetch admin details from the database
+    // Fetch admin email from the form
     $admin_email = $_POST['admin_email'];
-    $admin_password = $_POST['admin_password'];
 
-    $query = "SELECT * FROM admin WHERE admin_email = '$admin_email'";
-    $result = mysqli_query($conn, $query);
-    if (!$result || mysqli_num_rows($result) == 0) {
-        echo "Admin with this email does not exist.";
-    } else {
-        $admin_data = mysqli_fetch_assoc($result);
-        $hashed_password = $admin_data['password'];
+    // Generate a random 6-digit alphanumeric code
+    $verification_code = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
 
-        // Verify password
-        if (password_verify($admin_password, $hashed_password)) {
-            // Password is correct, redirect to a page
-            header("Location: new_admin.php");
+    // Send the code to the admin's email
+    $mail = new PHPMailer(true);
+
+    try {
+        //Server settings
+        $mail->SMTPDebug = SMTP::DEBUG_OFF; // Set to SMTP::DEBUG_SERVER for debugging
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';  // Gmail SMTP host
+        $mail->SMTPAuth = true;
+        $mail->Username = 'projecttesting48@gmail.com'; // Your Gmail email address
+        $mail->Password = 'llli cown oder zeuc'; // Your Gmail app password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use PHPMailer::ENCRYPTION_SMTPS if required
+        $mail->Port = 587; // Gmail SMTP port
+
+        //Recipients
+        $mail->setFrom('projecttesting48@gmail.com', 'Admin'); // Your Gmail email address and name
+        $mail->addAddress($admin_email); // Add recipient email
+
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Admin Verification Code';
+        $mail->Body = '<p>Dear Admin,</p>
+                       <p>Your verification code is: <strong>' . $verification_code . '</strong></p>
+                       <p>Please use this code to verify your email.</p>
+                       <p>Regards,<br>Admin</p>';
+
+        $mail->send();
+
+        // Store the code in the database
+        $update_query = "UPDATE admin SET otp='$verification_code' WHERE admin_email='$admin_email'";
+        if ($conn->query($update_query) === TRUE) {
+            // Redirect to verification page with the email
+            header("Location: verify_admin.php?admin_email=$admin_email");
             exit();
         } else {
-            // Password is incorrect
-            echo "Incorrect password.";
+            echo "Error updating OTP: " . $conn->error;
         }
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
 ?>
@@ -181,11 +213,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="admin.php" method="post">
         <div class="card">
             <p class="lock-icon"><i class="fas fa-lock"></i></p>
-            <h2>New Admin?</h2>
-            <p>You can Reset Your Credential  Here</p>
-            <input type="text" name='admin_email' class="passInput" placeholder="Existing Admin Email">
-            <input type="text" name='admin_password' class="passInput" placeholder="Password">
-            <input type="submit" class="btn" value="Verify Email">
+            <h2>Admin Verification</h2>
+            <p>Enter your Admin Email to receive a verification code.</p>
+            <input type="email" name='admin_email' class="passInput" placeholder="Admin Email" autocomplete="off">
+            <input type="submit" class="btn" value="Get Verification Code">
         </div>
     </form>
 
