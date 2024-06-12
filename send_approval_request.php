@@ -6,13 +6,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Get user information
     $username = $data->username;
     $contactNumber = $data->contact;
-    $studentEmail ="asjaddawre2@gmail.com";
+    $studentEmail ="dummy234@emailaddress";
 
     // Construct the message to be sent to the admin
     $message = "User $username wants to edit their profile. Contact Number: $contactNumber, Student Email: $studentEmail";
 
     // Admin email address (replace with your admin's email)
-    $adminEmail = "dawreasjad72@gmails.com";
+    $adminEmail = "admin_email.com";
 
     // Subject of the email
     $subject = "Profile Edit Request";
