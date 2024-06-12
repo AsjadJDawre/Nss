@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 
 // Email configuration
-const senderEmail = 'projecttesting48@gmail.com';
-const receiverEmail = 'dawreasjad72@gmail.com';
+const senderEmail = 'your_project_email';
+const receiverEmail = 'dummy124emailaddress';
 const subject = 'Test Email';
 
 // Read the content of response.php
@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: senderEmail,
-    pass: 'llli cown oder zeuc', // Replace with your actual Gmail password
+    pass: '', // Replace with your actual Gmail password
   },
 });
 
