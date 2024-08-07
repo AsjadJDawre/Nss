@@ -328,7 +328,7 @@ input[type="number"]::-webkit-inner-spin-button{
         <label class="form-check-label" for="voter_yes">Yes</label>
     </div>
     <div class="form-check">
-        <input type="radio" class="form-check-input" name="voter" id="voter_no" value="No"  >
+        <input type="radio" class="form-check-input" onchange="handleNoVoter()" name="voter" id="voter_no" value="No"  >
         <label class="form-check-label" for="voter_no">No</label>
     </div>
 </div>
@@ -445,6 +445,11 @@ window.onload = function() {
     alert("Please ensure all information provided is accurate. Student contact and email will be used for login purposes. Fill in all information wisely.");
 };
 
+const ele = document.getElementById("voter_id_section")
+function handleNoVoter(){
+  ele.style.display="none"
+
+}
 
 
 

@@ -65,7 +65,7 @@ $target_dir = "uploads"; // Change this to your uploads directory path
 $images = [];
 
 // Get image paths from uploads folder (assuming it's accessible)
-$files = glob($target_dir . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png}", GLOB_BRACE);
+$files = glob($target_dir . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,jfif}", GLOB_BRACE);
 
 if ($files !== false) {
     foreach ($files as $file) {

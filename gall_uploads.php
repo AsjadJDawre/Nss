@@ -10,11 +10,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 
 
-$target_dir = "C:\\xampp\\htdocs\\NSS\\uploads";
+$target_dir = "C:\\xampp\\htdocs\\NSS\\Nss\\uploads";
 $message = "";
 
 if (isset($_FILES["files"])) {
-  $allowed_extensions = array("jpg", "jpeg", "png");
+  $allowed_extensions = array("jpg", "jpeg", "png","jfif");
   $total = count($_FILES['files']['name']);
 
   for ($i = 0; $i < $total; $i++) {

@@ -94,7 +94,7 @@ if (isset($_POST['register'])) {
     if (isset($_FILES["photo"]) && !empty($_FILES["photo"]["name"])) {
         $file_name = $_FILES["photo"]["name"];
         $file_tmp = $_FILES["photo"]["tmp_name"];
-        $uploads_dir = 'C:\\xampp\\htdocs\\NSS\\images';
+        $uploads_dir = 'C:\\xampp\\htdocs\\NSS\\Nss\\images';
 
         if (!empty($file_name)) {
             // Sanitize the title to remove unwanted characters and spaces

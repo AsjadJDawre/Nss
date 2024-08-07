@@ -7,7 +7,7 @@ $tableData = [];
 
 // Check if data is sent via GET request
 function logMessage($message) {
-    $logFile = 'C:\\xampp\\htdocs\\NSS\\data_log.txt'; // Specify the path to your log file
+    $logFile = 'C:\\xampp\\htdocs\\NSS\\Nss\\data_log.txt'; // Specify the path to your log file
     file_put_contents($logFile, date('Y-m-d H:i:s') . ' - ' . $message . PHP_EOL, FILE_APPEND);
 }
 

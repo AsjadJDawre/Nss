@@ -61,7 +61,7 @@ require('fpdf/fpdf.php');
     $pdf->Rect($photoBoxX, $photoBoxY, $photoBoxWidth, $photoBoxHeight);
     
 /// Construct the image file path based on the username
-$imageFilename = 'C:\\xampp\\htdocs\\Nss\\images' . DIRECTORY_SEPARATOR . $username . '.png'; // You can adjust the extension based on your actual image format
+$imageFilename = 'C:\\xampp\\htdocs\\Nss\\Nss\\images' . DIRECTORY_SEPARATOR . $username . '.png'; // You can adjust the extension based on your actual image format
 
 // Check if the image file exists before adding it to the PDF
 if (file_exists($imageFilename)) {

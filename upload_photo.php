@@ -1,7 +1,7 @@
 <?php
 if(isset($_FILES['photo']) && isset($_POST['username'])){
     $username = $_POST['username'];
-    $targetDirectory = 'C:\\xampp\\htdocs\\NSS\\images\\';
+    $targetDirectory = 'C:\\xampp\\htdocs\\NSS\\Nss\\images\\';
     $targetFile = $targetDirectory . basename($_FILES["photo"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));

@@ -65,7 +65,7 @@ $target_dir = "uploads"; // Change this to your uploads directory path
 $images = [];
 
 // Get image paths from uploads folder (assuming it's accessible)
-$files = glob($target_dir . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png}", GLOB_BRACE);
+$files = glob($target_dir . DIRECTORY_SEPARATOR . "*.{jpg,jpeg,png,jfif}", GLOB_BRACE);
 
 if ($files !== false) {
     foreach ($files as $file) {
@@ -636,7 +636,35 @@ if (isset($_POST['delete']) && isset($_POST['delete_checkbox'])) {
         transform: translateX(-350%);
     }
 }
+.container2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
+.images-row {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping if there are too many images */
+  gap: 10px; /* Space between images */
+  justify-content: flex-start; /* Align images to the start of the container */
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.image-container img {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.image-container input {
+  margin-top: 5px;
+}
 
 </style>
 </head>
@@ -701,26 +729,26 @@ if (isset($_POST['delete']) && isset($_POST['delete_checkbox'])) {
     <?php endforeach; ?>
   </div>
 
-
-
+<div class="container2" style="display:flex; flex-direction:column;">
   <h1>Manage Photos</h1>
   <?php if (count($images) > 0): ?>
   <form action="" method="post" enctype="multipart/form-data">
     <p>Select photos to delete:</p>
-    <?php foreach ($images as $image): ?>
-    <div class="image-container">
-      <img src="<?php echo $image; ?>"  style="width: 150px; height: 100px; object-fit: cover;"  alt="Photo">
-      <input type="checkbox" name="delete_checkbox[]" value="<?php echo basename($image); ?>">
-      <label for="<?php echo basename($image); ?>">Delete</label>
+    <div class="images-row">
+      <?php foreach ($images as $image): ?>
+      <div class="image-container">
+        <img src="<?php echo $image; ?>" alt="Photo" style="width: 150px; height: 100px; object-fit: cover;" >
+        <input type="checkbox" name="delete_checkbox[]" value="<?php echo basename($image); ?>">
+        <label for="<?php echo basename($image); ?>">Delete</label>
+      </div>
+      <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
     <button type="submit" name="delete" class="btn btn-danger">Delete Selected Photos</button>
   </form>
   <?php else: ?>
     <p>No photos found in the uploads directory.</p>
   <?php endif; ?>
-
-
+</div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
