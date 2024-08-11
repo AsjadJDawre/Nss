@@ -241,7 +241,7 @@ $year_range = $current_year . '-' . $next_year;
 // Check if the "photo" field is set and not empty
 if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
 //  Construct the image file path based on the uploaded file
-$imageFilename = 'C:\\xampp\\htdocs\\NSS\\images\\' . basename($_FILES["photo"]["name"]);
+$imageFilename = 'C:\\xampp\\htdocs\\NSS\\Nss\\images\\' . basename($_FILES["photo"]["name"]);
 
 //  Check if the image file exists before adding it to the PDF
 if (file_exists($imageFilename)) {
@@ -249,12 +249,12 @@ if (file_exists($imageFilename)) {
     $pdf->Image($imageFilename, $photoBoxX, $photoBoxY, $photoBoxWidth, $photoBoxHeight);
 } else {
     //  If the image doesn't exist, display a placeholder image:
-    $pdf->Image('C:\\xampp\\htdocs\\NSS\\images\\placeholder.jpg', $photoBoxX, $photoBoxY, $photoBoxWidth, $photoBoxHeight);
+    $pdf->Image('C:\\xampp\\htdocs\\NSS\\Nss\\images\\placeholder.jpg', $photoBoxX, $photoBoxY, $photoBoxWidth, $photoBoxHeight);
 }
 } else {
 //  Handle case where "photo" field is not set or file upload failed
 //  Display a placeholder image or handle the absence of an image as per your requirement
-$pdf->Image('C:\\xampp\\htdocs\\NSS\\images\\placeholder.jpg', $photoBoxX, $photoBoxY, $photoBoxWidth, $photoBoxHeight);
+$pdf->Image('C:\\xampp\\htdocs\\NSS\\Nss\\images\\placeholder.jpg', $photoBoxX, $photoBoxY, $photoBoxWidth, $photoBoxHeight);
 }
 
 

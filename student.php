@@ -655,7 +655,8 @@ select{
 <div class="sidebar">
       <div class="logo-details">
         <i class="bx bx-user"></i>
-        <div class="logo_name"><?php echo $row['username']; ?></div>
+        <!-- <div class="logo_name"><?php echo $row['username']; ?></div> -->
+        <!-- <div class="logo_name">EXAMPLE</div> -->
         <i class="bx bx-menu" id="btn"></i>
       </div>
       <ul class="nav-list" style="

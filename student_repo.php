@@ -302,7 +302,7 @@ input[type="submit"]:hover {
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="#"> <img src="https://img.icons8.com/metro/26/000000/guest-male.png">
-                        <?php echo "Welcome " . $_SESSION['username'] ?></a>
+                      ADMIN</a>
                 </li>
             </ul>
         </div>
